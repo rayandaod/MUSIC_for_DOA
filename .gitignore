@@ -1,4 +1,5 @@
 old_submission/
 .DS_Store
-data/
+data/*
+!data/.gitkeep
 .idea/
