@@ -1,5 +1,7 @@
-old_submission/
 .DS_Store
 data/*
 !data/.gitkeep
 .idea/
+/**/*.wav
+venv/
+/**/.ipynb_checkpoints/
