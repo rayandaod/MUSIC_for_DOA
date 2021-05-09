@@ -67,16 +67,15 @@ def music_real(X, main_freq, d, D, M, locations):
     P_MUSIC = np.log(P_MUSIC / np.max(P_MUSIC))
     return P_MUSIC, peak_search_range
 
-
-def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=10, width=1):
+### Possible amelioration: only take the highest peak when fin_peaks gives too much angles ###
+def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=0.2, width=1):
     peaks, _ = sc.find_peaks(P_MUSIC, prominence=prominence, width=width)
     peaks = peaks * abs(peak_search_range[2] - peak_search_range[1]) + peak_search_range[0]
     print("Actual angle(s) is/are:", angles_to_be_found)
     print("Angle(s) found is/are:", peaks)
-    if len(angles_to_be_found) == len(peaks):
-        print(np.sum(np.sort(np.array(peaks)) == np.sort(np.array(angles_to_be_found))), "/", len(peaks),
+    print(np.sum(np.sort(np.array(peaks)) == np.sort(np.array(angles_to_be_found))), "/", len(peaks),
               "correct guesses")
-    else:
+    if len(angles_to_be_found) != len(peaks):
         print(f"{bcolors.WARNING}Number of sources and number of peaks do not match{bcolors.ENDC}")
     return peaks
 
