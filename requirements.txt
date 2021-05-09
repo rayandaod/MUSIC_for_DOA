@@ -2,4 +2,3 @@ jupyter
 numpy
 matplotlib
 scipy
-
