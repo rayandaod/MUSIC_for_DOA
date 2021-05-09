@@ -67,8 +67,8 @@ def music_real(X, main_freq, d, D, M, locations):
     P_MUSIC = np.log(P_MUSIC / np.max(P_MUSIC))
     return P_MUSIC, peak_search_range
 
-### Possible amelioration: only take the highest peak when fin_peaks gives too much angles ###
-def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=0.2, width=1):
+# Find the angles given the Spectrum Function
+def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=0.1, width=1):
     peaks, _ = sc.find_peaks(P_MUSIC, prominence=prominence, width=width)
     peaks = peaks * abs(peak_search_range[2] - peak_search_range[1]) + peak_search_range[0]
     print("Actual angle(s) is/are:", angles_to_be_found)
@@ -79,6 +79,7 @@ def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=0.2, 
         print(f"{bcolors.WARNING}Number of sources and number of peaks do not match{bcolors.ENDC}")
     return peaks
 
+# Work in process #
 
 # def find_highest_RMS(signal, frame_size=1000, hop_size=500):
 #     assert(len(signal) >= frame_size)
