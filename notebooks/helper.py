@@ -2,6 +2,7 @@ import numpy as np
 import scipy.signal as sc
 import params
 
+SPEED_OF_SOUND = 343  # m/s
 
 class bcolors:
     HEADER = '\033[95m'
@@ -36,7 +37,6 @@ def music_real(X, main_freq, d, D, M, locations):
     # Covariance matrix
     R = np.dot(X_centered, X_centered.conj().T)
 
-    # Mystery and boule of gomme
     # if M == 8:
     #    J = np.flip(np.eye(M), axis=1)
     #    R = R + np.dot(J, np.dot(R.conj(), J))
@@ -53,7 +53,7 @@ def music_real(X, main_freq, d, D, M, locations):
 
     # if M == 8:
     atheta = np.exp(-1j * 2 * np.pi / wavelen *
-                    np.kron(d, np.sin(peak_search_range / 180 * np.pi)).reshape(M, peak_search_range_size))
+                    np.kron(d, np.sin(peak_search_range / 180 *np.pi)).reshape(M,peak_search_range_size))
     # else:
     #    theta = np.arange(0, 360, 1)
     #    a = np.array([np.cos(theta/180*np.pi), np.sin(theta/180*np.pi)])
@@ -67,6 +67,7 @@ def music_real(X, main_freq, d, D, M, locations):
     P_MUSIC = np.log(P_MUSIC / np.max(P_MUSIC))
     return P_MUSIC, peak_search_range
 
+
 # Find the angles given the Spectrum Function
 def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=0.1, width=1):
     peaks, _ = sc.find_peaks(P_MUSIC, prominence=prominence, width=width)
@@ -78,6 +79,23 @@ def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=0.1, 
     if len(angles_to_be_found) != len(peaks):
         print(f"{bcolors.WARNING}Number of sources and number of peaks do not match{bcolors.ENDC}")
     return peaks
+
+# Generate data as described in the setup of the basic implementation of the MUSIC for DOA algo
+# (with possibility to add a phase for the correlated signals):
+def generate_data(M, N, d, wavelen, angles, freqs, var=0.01, phase = False):
+    thetas = np.array(angles) / 180 * np.pi
+    w = np.array(freqs)*2*np.pi 
+    D = np.size(thetas)
+    A = np.exp(-1j * 2 * np.pi * d/wavelen * np.kron(np.arange(M), np.sin(thetas)).reshape((M, D)))
+    S = 2 * np.exp(1j * (np.kron(w, np.arange(N)).reshape((D, N))))
+    if phase:
+        phase_diff = np.random.normal(0, np.pi/4, length(thetas))
+        phase_diff = np.exp(1j*phase_diff)
+        S = (np.multiply(S.T,phase_diff))
+    Noise = var * np.random.randn(M, N)
+    X = np.dot(A, S) + Noise
+    return X
+
 
 # Work in process #
 

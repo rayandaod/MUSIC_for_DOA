@@ -1,1 +1,0 @@
-SPEED_OF_SOUND = 343  # m/s
