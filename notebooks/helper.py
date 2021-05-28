@@ -1,6 +1,5 @@
 import numpy as np
 import scipy.signal as sc
-import params
 
 SPEED_OF_SOUND = 343  # m/s
 
@@ -96,12 +95,3 @@ def generate_data(M, N, d, wavelen, angles, freqs, var=0.01, phase = False):
     X = np.dot(A, S) + Noise
     return X
 
-
-# Work in process #
-
-# def find_highest_RMS(signal, frame_size=1000, hop_size=500):
-#     assert(len(signal) >= frame_size)
-#     rms_array = []
-#     for frame in :
-#         rms_array.append(np.sqrt(np.mean(frame ** 2)))
-#     rms_max,
