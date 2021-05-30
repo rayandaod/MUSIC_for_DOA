@@ -88,9 +88,9 @@ def generate_data(M, N, d, wavelen, angles, freqs, var=0.01, phase = False):
     A = np.exp(-1j * 2 * np.pi * d/wavelen * np.kron(np.arange(M), np.sin(thetas)).reshape((M, D)))
     S = 2 * np.exp(1j * (np.kron(w, np.arange(N)).reshape((D, N))))
     if phase:
-        phase_diff = np.random.normal(0, np.pi/4, length(thetas))
+        phase_diff = np.random.normal(0, np.pi/4, len(thetas))
         phase_diff = np.exp(1j*phase_diff)
-        S = (np.multiply(S.T,phase_diff))
+        S = (np.multiply(S.T,phase_diff)).T
     Noise = var * np.random.randn(M, N)
     X = np.dot(A, S) + Noise
     return X
