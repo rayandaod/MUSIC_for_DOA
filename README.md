@@ -3,6 +3,7 @@
 ## Summary
 
 MUSIC for DOA is a popular algorithm used to obtain the Direction Of Arrival estimation for signals reaching sensor arrays using the MUltiple Signal Classification method. In ths project, we were asked to implement a **BASIC** and an **IMPROVED** version of the algorithm and apply it on **GENERATED** and **REAL** data, composed of **CORRELATED** and **UNCORRELATED** signals.
+
 As a reference, we were given the project of [Huang Guyue, Iriarte Sainz Diego Gabriel and Nyambuu Lkham](https://github.com/rayandaod/SSDP_mini-project/tree/master/DOA_final).
 
 ## Organisation
@@ -35,9 +36,9 @@ ipython
 
 ## References
 
-Honghao Tang, <em>"DOA estimation based on MUSIC algorithm"</em>, Linnéuniversitetet, 2014
-DAI Zeyang, DU Yuming, <em>"DOA Estimation Based on Improved MUSIC Algorithm"</em>, Chengdu University of Information Technology, 2009
-A. Paulraj, B. Ottersten, R. Roy, A. Swindlehurst, G. Xu and T. Kailath, <em>"Subspace Methods for Directions-of-Arrival Estimation"</em>, Handbook of Statistics, 1993
-M. Devendra and K. Manjunathachari, <em>"DOA estimation of a system using MUSIC method"</em>, International Conference on Signal Processing and Communication Engineering Systems, 2015, pp. 309-313, doi: 10.1109/SPACES.2015.7058272.
-Ahmad, Mushtaq & Zhang, Xiaofei, <em>"Performance of Music Algorithm for DOA Estimation"</em>, 2016
+- Honghao Tang, <em>"DOA estimation based on MUSIC algorithm"</em>, Linnéuniversitetet, 2014
+- DAI Zeyang, DU Yuming, <em>"DOA Estimation Based on Improved MUSIC Algorithm"</em>, Chengdu University of Information Technology, 2009
+- A. Paulraj, B. Ottersten, R. Roy, A. Swindlehurst, G. Xu and T. Kailath, <em>"Subspace Methods for Directions-of-Arrival Estimation"</em>, Handbook of Statistics, 1993
+- M. Devendra and K. Manjunathachari, <em>"DOA estimation of a system using MUSIC method"</em>, International Conference on Signal Processing and Communication Engineering Systems, 2015, pp. 309-313, doi: 10.1109/SPACES.2015.7058272.
+- Ahmad, Mushtaq & Zhang, Xiaofei, <em>"Performance of Music Algorithm for DOA Estimation"</em>, 2016
 
