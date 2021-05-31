@@ -9,7 +9,7 @@ As a reference, we were given the project of [Huang Guyue, Iriarte Sainz Diego G
 
 ## Organisation
 
-The project is divided in 3 jupyter notebooks (and a "helpers" file):
+The project is divided in 3 jupyter notebooks (and a "helper" file):
 - MUSIC for DOA on generated data, where we focus on the implementations of both the *basic* and the *improved* version of the MUSIC for DOA algo applied on *generated* data. The major improvements of the second version of the algorithm are the better handling of *correlated* data and the error estimation/correction applied on the microphones array.
 - MUSIC for DOA on real data, where we try to adapt the *basic* and *improved* algorithm to work on real samples of signals (mainly sweep and speech).
 - Simulations, where we do additional examples and tuning of parameters to try to understand in depth the impact of each components of the algorithm.
