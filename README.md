@@ -2,8 +2,8 @@
 
 ## Summary
 
-MUSIC for DOA is a popular algorithm used to obtain the Direction Of Arrival estimation for signals reaching sensor arrays using the MUltiple Signal Classification method.
-In ths project, we were asked to implement a **BASIC** and an **IMPROVED** version of the algorithm and apply it on **GENERATED** and **REAL** data, composed of **CORRELATED** and **UNCORRELATED** signals.
+<p>MUSIC for DOA is a popular algorithm used to obtain the Direction Of Arrival estimation for signals reaching sensor arrays using the MUltiple Signal Classification method.<br>
+In ths project, we were asked to implement a **BASIC** and an **IMPROVED** version of the algorithm and apply it on **GENERATED** and **REAL** data, composed of **CORRELATED** and **UNCORRELATED** signals.<p>
 
 As a reference, we were given the project of [Huang Guyue, Iriarte Sainz Diego Gabriel and Nyambuu Lkham](https://github.com/rayandaod/SSDP_mini-project/tree/master/DOA_final).
 
