@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from pathlib import Path
 from scipy.io import wavfile
+from scipy import signal
 
 SPEED_OF_SOUND = 343  # m/s
 data_path = Path("../data")
@@ -11,17 +12,23 @@ data_path = Path("../data")
 
 def load_and_plot(file_shortname, filenames, retrieve_angle=False):
     chosen_file_path = data_path / filenames[file_shortname]
+
     if retrieve_angle:
         directions_of_arrival = [int(file_shortname[-2:])]
     else:
         directions_of_arrival = None
+
     # Load the audio file
     fs, data = wavfile.read(data_path / chosen_file_path)
+
     # Normalisation
     data = data / np.max(np.array(data), axis=0)
+
     # Plot the waveform
-    plt.plot(data[:, 0])
-    plt.title("First microphone recording")
+    plt.plot(np.arange(len(data[:, 0])) / fs, data[:, 0])
+    plt.title("Loaded audio file")
+    plt.xlabel('Time in seconds')
+    plt.ylabel('Amplitude')
     plt.show()
 
     return fs, data, directions_of_arrival, chosen_file_path
@@ -89,7 +96,7 @@ def time_frames(audio_len, N=1024):
     return time_frame_indices
 
 
-def find_n_freqs(data_focus, fs, n_freqs, prominence):
+def find_n_freqs(data_focus, fs, n_freqs, prominence, freq_range=None):
     # Compute the Power Spectral Density
     data_focus_centered = data_focus - np.mean(data_focus)
     Xw = np.fft.fft(data_focus_centered)
@@ -99,11 +106,21 @@ def find_n_freqs(data_focus, fs, n_freqs, prominence):
     psd = psd / max(psd)
 
     # Find the required number of peaks in the PSD
-    peak_indices = sc.find_peaks(psd, prominence=prominence)[0]
-    peak_values = psd[peak_indices]
-    n_largest_peak_indices_in_peak_values = np.argsort(peak_values)[::-1][:n_freqs]
+    if freq_range is None:
+        peak_indices = sc.find_peaks(psd, prominence=prominence)[0]
+        peak_values = psd[peak_indices]
+        n_largest_peak_indices_in_peak_values = np.argsort(peak_values)[::-1][:n_freqs]
+        n_peak_freqs = freq_indices[peak_indices[n_largest_peak_indices_in_peak_values]]
+    else:
+        start_freq = int(np.floor(freq_range[0]*2*L/fs))
+        end_freq = int(np.floor(freq_range[1]*2*L/fs))
+        start_to_end = np.arange(start_freq, end_freq)
+        peak_indices = sc.find_peaks(psd[start_to_end], prominence=prominence)[0]
+        peak_values = psd[start_to_end][peak_indices]
+        n_largest_peak_indices_in_peak_values = np.argsort(peak_values)[::-1][:n_freqs]
+        n_peak_freqs = freq_indices[start_to_end][peak_indices[n_largest_peak_indices_in_peak_values]]
 
-    return psd, freq_indices, freq_indices[peak_indices[n_largest_peak_indices_in_peak_values]]
+    return psd, freq_indices, n_peak_freqs
 
 
 def frame_is_too_quiet(audio_frame, threshold):
@@ -114,7 +131,7 @@ def frame_is_too_quiet(audio_frame, threshold):
 
 
 def get_freqs_by_range(audio, fs, mic_indices, n_freqs=1, audio_time_range=None, N=1024, prominence=0.5,
-                       plot=False, quiet_threshold=0.3):
+                       plot=False, quiet_threshold=0.3, freq_range=None):
     # Make sure that the audio file is bigger than the frame length
     audio_len = audio.shape[0]
     assert audio_len >= N, "The audio file is smaller than the frame_length!"
@@ -140,7 +157,7 @@ def get_freqs_by_range(audio, fs, mic_indices, n_freqs=1, audio_time_range=None,
             if frame_is_too_quiet(data_focus, threshold=quiet_threshold):
                 freqs_by_time_range[f"{audio_time_range[0]}, {audio_time_range[-1]}"] = None
             else:
-                psd, freq_indices, main_freqs = find_n_freqs(data_focus, fs, n_freqs, prominence)
+                psd, freq_indices, main_freqs = find_n_freqs(data_focus, fs, n_freqs, prominence, freq_range)
                 freqs_by_time_range[f"{audio_time_range[0]}, {audio_time_range[-1]}"] = main_freqs
 
             index += 1
@@ -150,7 +167,7 @@ def get_freqs_by_range(audio, fs, mic_indices, n_freqs=1, audio_time_range=None,
         X.append(audio[audio_time_range, :][:, mic_indices].T)
 
         data_focus = audio[audio_time_range, 0]
-        psd, freq_indices, main_freqs = find_n_freqs(data_focus, fs, n_freqs, prominence)
+        psd, freq_indices, main_freqs = find_n_freqs(data_focus, fs, n_freqs, prominence, freq_range)
         freqs_by_time_range[f"{audio_time_range[0]}, {audio_time_range[-1]}"] = main_freqs
 
     if plot:
@@ -159,19 +176,32 @@ def get_freqs_by_range(audio, fs, mic_indices, n_freqs=1, audio_time_range=None,
             integer_map = map(int, string_list)
             integer_list = list(integer_map)
             if value is None:
-                plt.plot(np.arange(integer_list[0], integer_list[1]), audio[integer_list[0]: integer_list[1], 0],
-                         color='red')
+                plt.plot(np.arange(integer_list[0], integer_list[1])/fs, audio[integer_list[0]: integer_list[1], 0],
+                         color='grey')
             else:
-                plt.plot(np.arange(integer_list[0], integer_list[1]), audio[integer_list[0]: integer_list[1], 0],
-                         color='blue')
-        custom_lines = [Line2D([0], [0], color='red', lw=4),
-                        Line2D([0], [0], color='blue', lw=4)]
+                plt.plot(np.arange(integer_list[0], integer_list[1])/fs, audio[integer_list[0]: integer_list[1], 0],
+                         color='green')
+        custom_lines = [Line2D([0], [0], color='grey', lw=4),
+                        Line2D([0], [0], color='green', lw=4)]
         plt.legend(custom_lines, ['too quiet', 'ok'])
         plt.title(f'Audio analysis by frame, with quiet threshold (={quiet_threshold}) constraint')
+        plt.ylabel('Amplitude')
+        plt.xlabel('Time (in seconds)')
+        plt.show()
+
+        n_peaks = 0
+        for key, value in freqs_by_time_range.items():
+            # print(str(key) + ': ' + str(value))
+            if value is not None and len(value) > 0: n_peaks += 1
+        print(f"{n_peaks} frames had a frequency peak in the frequency range: "
+              f"{freq_range if freq_range is not None else [0, fs/2]} Hz.")
     return X, freqs_by_time_range
 
 
-def stft_main_freqs(fs, freqs_by_time_range):
+def stft_main_freqs(data, fs, freqs_by_time_range, N=1024):
+    data = data[:, 0]/max(data[:, 0])
+    f, t, Zxx = signal.stft(data, fs, nperseg=N)
+    plt.pcolormesh(t, f, np.abs(Zxx), vmin=0, vmax=max(data)/10)
     num_valid_frames = 0
     for key, value in freqs_by_time_range.items():
         if value is not None:
@@ -181,14 +211,14 @@ def stft_main_freqs(fs, freqs_by_time_range):
             integer_list = list(integer_map)
             for v in value:
                 audio_time_range = np.arange(integer_list[0], integer_list[1]) / fs
-                plt.plot(audio_time_range, [v] * len(audio_time_range), color='red')
+                plt.plot(audio_time_range, [v] * len(audio_time_range), color='white')
     plt.title('Main frequency by time range')
     plt.ylabel('Frequency in Hz')
     plt.xlabel('Time in seconds')
     plt.show()
 
     print(f'{num_valid_frames} valid frames were analysed.')
-    print(f'{len(freqs_by_time_range) - num_valid_frames} frames were discarded.')
+    print(f'{len(freqs_by_time_range) - num_valid_frames} frames were discarded because too quiet.')
 
 
 def find_most_prom_peak_index(P_MUSIC_array, peak_search_range, n=1, prominence=0.5):
@@ -215,13 +245,14 @@ def find_most_prom_peak_index(P_MUSIC_array, peak_search_range, n=1, prominence=
     best_p_music_indices = (-np.array(prom)).argsort()[:n]
 
     angles_found_array = []
+    cmap = get_cmap(len(P_MUSIC_array))
     for p_music_i in best_p_music_indices:
         P_MUSIC_w_most_prom_peak = P_MUSIC_array[p_music_i]
-        plt.plot(peak_search_range, P_MUSIC_w_most_prom_peak / max(abs(P_MUSIC_w_most_prom_peak)), '-k')
+        plt.plot(peak_search_range, P_MUSIC_w_most_prom_peak / max(abs(P_MUSIC_w_most_prom_peak)), c=cmap(p_music_i))
         peaks, _ = sc.find_peaks(P_MUSIC_array[p_music_i], prominence=prominence)
         angles_found = peaks * abs(peak_search_range[2] - peak_search_range[1]) + peak_search_range[0]
         if len(angles_found > 0):
-            plt.vlines(angles_found, -1, 0, color='red')
+            plt.vlines(angles_found, -1, 0, color='black')
             angles_found_array.append(angles_found[-1])
     plt.title('Spacial spectrum')
 
