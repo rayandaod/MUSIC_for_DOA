@@ -10,6 +10,13 @@ SPEED_OF_SOUND = 343  # m/s
 data_path = Path("../data")
 
 
+def mic_distances(mic_locations):
+    d = []
+    for l in mic_locations:
+        d.append(np.linalg.norm(l-mic_locations[0]))
+    return d
+
+
 def load_and_plot(file_shortname, filenames, retrieve_angle=False):
     chosen_file_path = data_path / filenames[file_shortname]
 
@@ -32,47 +39,6 @@ def load_and_plot(file_shortname, filenames, retrieve_angle=False):
     plt.show()
 
     return fs, data, directions_of_arrival, chosen_file_path
-
-
-def music(X, f, d, D, M):
-    # Make sure we have more microphones than input signals
-    assert (M > D)
-
-    # Peak search range (start degree, end degree, step)
-    peak_search_range = np.arange(-90, 90, 1)
-    peak_search_range_len = len(peak_search_range)
-
-    # Compute the wavelength for X
-    wavelen = SPEED_OF_SOUND / f
-
-    # Centralize X
-    X_mean = np.mean(X, axis=1)
-    X_centered = X - np.tile(X_mean, (np.shape(X)[1], 1)).T
-
-    # Covariance matrix
-    R = np.dot(X_centered, X_centered.conj().T)
-
-    # Eigen value decomposition
-    eig_val, eig_vect = np.linalg.eig(R)
-
-    # Pick the smallest M-D eigen values (corresponding to the noise subspace) and their eigen vectors
-    ids = np.abs(eig_val).argsort()[:(M - D)]
-    En = eig_vect[:, ids]
-
-    # Noise subspace estimation: Ren = EnEn'
-    Ren = np.dot(En, En.conj().T)
-
-    # TODO: explain what this is (it is the matrix gathering every possible directions as columns)
-    a_theta = np.exp(-1j * 2 * np.pi / wavelen * np.kron(d, np.sin(peak_search_range / peak_search_range_len * np.pi))
-                     .reshape(M, peak_search_range_len))
-
-    # Compute the resulting vector P
-    P_MUSIC = np.zeros(peak_search_range_len)
-    for j in range(peak_search_range_len):
-        P_MUSIC[j] = 1 / abs(np.dot(np.dot(a_theta[:, j].conj().T, Ren), a_theta[:, j]))
-
-    P_MUSIC = np.log(P_MUSIC / np.max(P_MUSIC))
-    return P_MUSIC, peak_search_range
 
 
 # Find the angles given the Spectrum Function
@@ -180,9 +146,9 @@ def get_freqs_by_range(audio, fs, mic_indices, n_freqs=1, audio_time_range=None,
                          color='grey')
             else:
                 plt.plot(np.arange(integer_list[0], integer_list[1])/fs, audio[integer_list[0]: integer_list[1], 0],
-                         color='green')
+                         color='limegreen')
         custom_lines = [Line2D([0], [0], color='grey', lw=4),
-                        Line2D([0], [0], color='green', lw=4)]
+                        Line2D([0], [0], color='limegreen', lw=4)]
         plt.legend(custom_lines, ['too quiet', 'ok'])
         plt.title(f'Audio analysis by frame, with quiet threshold (={quiet_threshold}) constraint')
         plt.ylabel('Amplitude')
