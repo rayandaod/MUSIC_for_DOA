@@ -5,3 +5,4 @@ data/*
 /**/*.wav
 venv/
 /**/.ipynb_checkpoints/
+__pycache__/

@@ -229,3 +229,20 @@ def get_cmap(n, name='hsv'):
     """Returns a function that maps each index in 0, 1, ..., n-1 to a distinct
     RGB color; the keyword argument name must be a standard mpl colormap name."""
     return plt.cm.get_cmap(name, n)
+
+
+# Generate data as described in the setup of the basic implementation of the MUSIC for DOA algo
+# (with possibility to add a phase for the correlated signals):
+def generate_data(M, N, d, wavelen, angles, freqs, var=0.01, phase = False):
+    thetas = np.array(angles) / 180 * np.pi
+    w = np.array(freqs)*2*np.pi 
+    D = np.size(thetas)
+    A = np.exp(-1j * 2 * np.pi * d/wavelen * np.kron(np.arange(M), np.sin(thetas)).reshape((M, D)))
+    S = 2 * np.exp(1j * (np.kron(w, np.arange(N)).reshape((D, N))))
+    if phase:
+        phase_diff = np.random.normal(0, np.pi/4, len(thetas))
+        phase_diff = np.exp(1j*phase_diff)
+        S = (np.multiply(S.T,phase_diff)).T
+    Noise = var * np.random.randn(M, N)
+    X = np.dot(A, S) + Noise
+    return X
