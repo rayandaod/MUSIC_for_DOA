@@ -47,7 +47,7 @@ def find_angles(P_MUSIC, peak_search_range, angles_to_be_found, prominence=0.1, 
     peaks = peaks * abs(peak_search_range[2] - peak_search_range[1]) + peak_search_range[0]
     print("Actual angle(s) is/are:", angles_to_be_found)
     print("Angle(s) found is/are:", peaks)
-    print(np.sum(np.sort(np.array(peaks)) == np.sort(np.array(angles_to_be_found))), "/", len(peaks),
+    print(np.sum(np.sort(np.array(peaks)) == np.sort(np.array(angles_to_be_found))), "/", len(angles_to_be_found),
           "correct guesses")
     return peaks
 

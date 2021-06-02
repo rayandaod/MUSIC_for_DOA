@@ -29,6 +29,10 @@ datetime
 ipython 
 ```
 
+## Data
+
+[Data folder](https://drive.google.com/drive/folders/1hDV3cjiMLJApw9P14WEQ8ffyV7b0Djv9?usp=sharing)
+
 ## Authors
 
 - Rayan Daod Nathoo
