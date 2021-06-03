@@ -76,7 +76,7 @@ Run the [generated_data.ipynb](https://github.com/rayandaod/SSDP_mini-project/bl
 - Pierre Gabioud
 
 ## Acknowledgements
-Thank you Professor Andrea Ridolfi and his team for this project!
+Thank you [Professor Andrea Ridolfi](https://people.epfl.ch/andrea.ridolfi) and his team for this project!
 
 ## References
 
