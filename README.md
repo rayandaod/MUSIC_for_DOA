@@ -7,7 +7,30 @@ In this project, we were asked to implement a **BASIC** and an **IMPROVED** vers
 
 The real data was provided by the course team, and was also retrieved from the [Pyramic dataset](https://github.com/fakufaku/pyramic-dataset).
 
-As a reference, we were given the previous submission of [Huang Guyue, Iriarte Sainz Diego Gabriel and Nyambuu Lkham](https://github.com/rayandaod/SSDP_mini-project/tree/master/DOA_final).
+As a reference, we were given the [previous year submission](https://github.com/rayandaod/SSDP_mini-project/tree/master/DOA_final) by Huang Guyue, Iriarte Sainz Diego Gabriel and Nyambuu Lkham.
+
+
+## Quick start
+
+Clone the repository
+
+```bash
+git clone https://github.com/rayandaod/SSDP_mini-project.git
+cd SSDP_mini-project
+```
+
+Download the content of the data folder [here](https://drive.google.com/drive/folders/1hDV3cjiMLJApw9P14WEQ8ffyV7b0Djv9?usp=sharing) and place in ```SSDP_mini-project/data/```
+
+Create your virtual environment (optional)
+
+Install the dependencies and start a local Jupyter server
+```bash
+pip install requirements.txt
+jupyter notebook
+```
+
+Run the [generated_data.ipynb](https://github.com/rayandaod/SSDP_mini-project/blob/master/notebooks/generated_data.ipynb) or the [real_data.ipynb](https://github.com/rayandaod/SSDP_mini-project/blob/master/notebooks/real_data.ipynb) notebook
+
 
 ## Project architecture
 ```
@@ -31,11 +54,9 @@ The ```notebooks``` folder is divided in 3 jupyter notebooks, and one python fil
 - [Simulations.ipynb](https://github.com/rayandaod/SSDP_mini-project/blob/master/notebooks/Simulations.ipynb) - additional examples and tuning of parameters to try to understand in depth the impact of each components of the algorithm.
 - [helper.py](https://github.com/rayandaod/SSDP_mini-project/blob/master/notebooks/helper.py) - implementation of helper functions used through the previous notebooks.
 
-## Language and dependencies
+## Dependencies
 
-Python 3
-
-The required Python librairies to run the project are the following:
+The required Python 3 librairies to run the project are the following:
 
 ```bash
 jupyter
@@ -47,27 +68,6 @@ math
 datetime
 ipython 
 ```
-
-## Quick start
-
-Clone the repository
-
-```bash
-git clone https://github.com/rayandaod/SSDP_mini-project.git
-cd SSDP_mini-project
-```
-
-Download the content of the data folder [here](https://drive.google.com/drive/folders/1hDV3cjiMLJApw9P14WEQ8ffyV7b0Djv9?usp=sharing) and place in ```SSDP_mini-project/data/```
-
-Create your virtual environment (optional)
-
-Install the dependencies and start a local Jupyter server
-```bash
-pip install requirements.txt
-jupyter notebook
-```
-
-Run the [generated_data.ipynb](https://github.com/rayandaod/SSDP_mini-project/blob/master/notebooks/generated_data.ipynb) or the [real_data.ipynb](https://github.com/rayandaod/SSDP_mini-project/blob/master/notebooks/real_data.ipynb) notebook
 
 ## Authors
 
